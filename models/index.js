@@ -1,7 +1,13 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
-const ADMIN = require('../configs/admin.config');
 const User = require('./user.model');
+
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL;
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
+const ADMIN_PHONE = process.env.ADMIN_PHONE;
+const ADMIN_FNAME = process.env.ADMIN_FNAME;
+const ADMIN_LNAME = process.env.ADMIN_LNAME;
+const ADMIN_ROLES = process.env.ADMIN_ROLES;
 
 const db = {};
 db.mongoose = mongoose;
@@ -60,18 +66,17 @@ initial = async () => {
 					}
 					if (!err && count === 0) {
 						try {
-							const { email, firstname, lastname, phone, password, roles } =
-								ADMIN;
 							const user = new User({
-								email,
-								firstname,
-								lastname,
-								phone,
-								password: bcrypt.hashSync(password, 8),
+								email: ADMIN_EMAIL,
+								firstname: ADMIN_FNAME,
+								lastname: ADMIN_LNAME,
+								phone: ADMIN_PHONE,
+								roles: ADMIN_ROLES,
+								password: bcrypt.hashSync(ADMIN_PASSWORD, 8),
 							});
-							const adminRoles = await Role.findOne({ name: roles }).select(
-								'_id'
-							);
+							const adminRoles = await Role.findOne({
+								name: ADMIN_ROLES,
+							}).select('_id');
 							user.roles = adminRoles._id;
 							await user.save();
 							console.log('add admin to db');
