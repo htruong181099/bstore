@@ -1,20 +1,22 @@
-const controller = require("../controllers/user.controller");
-const authJwt = require("../middlewares/authJwt")
+const controller = require('../controllers/user.controller');
+const authJwt = require('../middlewares/authJwt');
 
-module.exports = (app) =>{
-    app.get("/users",
-        [authJwt.verifyToken,authJwt.isActive],
-        controller.getProfile)
+const router = require('express').Router();
 
-    app.put("/users/",
-        [authJwt.verifyToken,authJwt.isActive],
-        controller.validate('update'),
-        controller.validateErrorHandler,
-        controller.updateProfile
-    )
+router.get('/', [authJwt.verifyToken, authJwt.isActive], controller.getProfile);
 
-    app.get("/users/orders",
-        [authJwt.verifyToken,authJwt.isActive],
-        controller.getOrders)
+// router.put(
+// 	'/',
+// 	[authJwt.verifyToken, authJwt.isActive],
+// 	controller.validate('update'),
+// 	controller.validateErrorHandler,
+// 	controller.updateProfile
+// );
 
-}
+// router.get(
+// 	'/orders',
+// 	[authJwt.verifyToken, authJwt.isActive],
+// 	controller.getOrders
+// );
+
+module.exports = router;
